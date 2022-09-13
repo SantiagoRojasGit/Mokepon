@@ -1,42 +1,62 @@
+//const, el resultado de la variable no va a cambiar a lo largo de la ejecucion del codigo
+const sectionSeleccionarAtaque = document.getElementById("seleccionar_ataque")
+const sectionReiniciar = document.getElementById("reiniciar")
+const botonMascotaJugador = document.getElementById("boton_mascota")
+const botonFuego = document.getElementById("boton_fuego")
+const botonAgua = document.getElementById("boton_agua")
+const botonTierra = document.getElementById("boton_tierra")
+const botonReiniciar = document.getElementById('boton_reiniciar')
+
+const sectionSeleccionarMascota = document.getElementById("seleccionar_mascota")
+const inputHipodoge = document.getElementById("hipodoge")
+const inputCapipepo = document.getElementById("capipepo")
+const inputRatagueya = document.getElementById("ratigueya")
+const spanMascotaJuador = document.getElementById("mascotaJugador")
+
+const spanMascotaEnemigo = document.getElementById("mascotaEnemigo")
+
+const spanVidasJugador = document.getElementById('vidasJugador')
+const spanVidasEnemigo = document.getElementById('vidasEnemigo')
+
+const sectionMensajes = document.getElementById('resultado')   //traemos la seccion de nuestro HTML
+const ataquesDelJugador = document.getElementById('ataqueDelJugador')
+const ataquesDelEnemigo = document.getElementById('ataqueDelEnemigo')
+
+//let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador
 let ataqueEnemigo
 let vidasJugador = 3
 let vidasEnemigo = 3
 
+class Mokepon {  //los nombres de las clases inician con mayuscula
+    constructor(nombre, foto, vida) {   //propiedades que usaremos en nuestra clase
+        this.nombre = nombre //this hace referencia a las propiedades que tenemos dentro de nuestra clase
+        //Es como, el nombre del mokepon es el nombre del constructor
+        this.foto = foto
+        this.vida = vida
+    }
+}
+
+let hipodoge = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5) //Asi creamos un objeto, instancia de una clase
+
+let capipepo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5)
+
+let ratigueya = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5)
+
 function iniciarJuego() {
-    let sectionSeleccionarAtaque = document.getElementById("seleccionar_ataque")
     sectionSeleccionarAtaque.style.display = 'none'  //Tosdos los elementos de html tienen una propiedad style donde por defecto ser guardan los estilos (como el color de la letra, los tamaños...)
     //Entonces, la seccion del html 'seleccionar_ataque' se ocultara cuando se ejecute la funcion iniciarJuego()
-
-    let sectionReiniciar = document.getElementById("reiniciar")
     sectionReiniciar.style.display = 'none'
-
-    let botonMascotaJugador = document.getElementById("boton_mascota")
     botonMascotaJugador.addEventListener("click", seleecionarMascotaJugador)
-
-    let botonFuego = document.getElementById("boton_fuego")
     botonFuego.addEventListener("click", ataqueFuego)
-    let botonAgua = document.getElementById("boton_agua")
     botonAgua.addEventListener("click", ataqueAgua)
-    let botonTierra = document.getElementById("boton_tierra")
     botonTierra.addEventListener("click", ataqueTierra)
-
-    let botonReiniciar = document.getElementById('boton_reiniciar')
     botonReiniciar.addEventListener('click', reiniciarJuego)
 }
 
 function seleecionarMascotaJugador() {
-    let sectionSeleccionarMascota = document.getElementById("seleccionar_mascota")
     sectionSeleccionarMascota.style.display = 'none'
-
-    let sectionSeleccionarAtaque = document.getElementById("seleccionar_ataque")
     sectionSeleccionarAtaque.style.display = 'flex'
-
-    let inputHipodoge = document.getElementById("hipodoge")
-    let inputCapipepo = document.getElementById("capipepo")
-    let inputRatagueya = document.getElementById("ratigueya")
-    let spanMascotaJuador = document.getElementById("mascotaJugador")
-
     if (inputHipodoge.checked) {  //Mediante la propiedad checked podemos validar si algun input de tipo radio esta 'chuleado', entonces:
         //si el input hipodoge esta marcado, mostrara un...
         //alert("Seleccionaste a Hipodoge")
@@ -54,14 +74,11 @@ function seleecionarMascotaJugador() {
         sectionSeleccionarMascota.style.display = 'flex'
         sectionSeleccionarAtaque.style.display = 'none'
     }
-
     seleccionarMascotaEnemigo()
 }
 
 function seleccionarMascotaEnemigo() {
     let mascotaAleatoria = aleatorio(1, 3)
-    let spanMascotaEnemigo = document.getElementById("mascotaEnemigo")
-
     if (mascotaAleatoria == 1) {
         //Hipodogue
         spanMascotaEnemigo.innerHTML = "Hipodogue"
@@ -101,14 +118,10 @@ function ataqueAleatorioEnemigo(params) {
     else {
         ataqueEnemigo = 'TIERRA'
     }
-
     combate();
 }
 
 function combate() {
-    let spanVidasJugador = document.getElementById('vidasJugador')
-    let spanVidasEnemigo = document.getElementById('vidasEnemigo')
-
     if (ataqueJugador == 'FUEGO' && ataqueEnemigo == 'TIERRA' || ataqueJugador == 'AGUA' && ataqueEnemigo == 'FUEGO' || ataqueJugador == 'TIERRA' && ataqueEnemigo == 'AGUA') {
         crearMensaje(' - GANASTE')
         vidasEnemigo--
@@ -122,7 +135,6 @@ function combate() {
         vidasJugador--
         spanVidasJugador.innerHTML = vidasJugador
     }
-
     revisarVidas()
 }
 
@@ -134,31 +146,7 @@ function revisarVidas() {
     }
 }
 
-function crearMensajeFinal(resultadoFinal) {
-    let sectionMensajes = document.getElementById('resultado')
-
-    //let parrafo = document.createElement('p')
-    sectionMensajes.innerHTML = resultadoFinal
-
-    //sectionMensajes.appendChild(parrafo)
-
-    let botonFuego = document.getElementById("boton_fuego")
-    botonFuego.disabled = true  //asi es como podemos agregar algun atributo a un elemento de HTML desde JS
-    //estamos agregandio el atributo disabled, para que cada vez que se ejecute la funcion se desabilite el boton
-    let botonAgua = document.getElementById("boton_agua")
-    botonAgua.disabled = true
-    let botonTierra = document.getElementById("boton_tierra")
-    botonTierra.disabled = true
-
-    let sectionReiniciar = document.getElementById("reiniciar")
-    sectionReiniciar.style.display = 'block'
-}
-
 function crearMensaje(resultado) {  //parametro
-    let sectionMensajes = document.getElementById('resultado')   //traemos la seccion de nuestro HTML
-    let ataquesDelJugador = document.getElementById('ataqueDelJugador')
-    let ataquesDelEnemigo = document.getElementById('ataqueDelEnemigo')
-
     //let notificacion = document.createElement('p')
     let nuevoAtaqueDelJugador = document.createElement('p')
     let nuevoAtaqueDelEnemigo = document.createElement('p')
@@ -173,6 +161,20 @@ function crearMensaje(resultado) {  //parametro
     //sectionMensajes.appendChild(notificacion) //Mediante appendChild podemos meter nuestro parrafo dentro de nuestra seccion en el HTML
     ataquesDelJugador.appendChild(nuevoAtaqueDelJugador)
     ataquesDelEnemigo.appendChild(nuevoAtaqueDelEnemigo)
+}
+
+function crearMensajeFinal(resultadoFinal) {
+    //let parrafo = document.createElement('p')
+    sectionMensajes.innerHTML = resultadoFinal
+
+    //sectionMensajes.appendChild(parrafo)
+
+    botonFuego.disabled = true  //asi es como podemos agregar algun atributo a un elemento de HTML desde JS
+    //estamos agregandio el atributo disabled, para que cada vez que se ejecute la funcion se desabilite el boton
+
+    botonAgua.disabled = true
+    botonTierra.disabled = true
+    sectionReiniciar.style.display = 'block'
 }
 
 function reiniciarJuego() {
