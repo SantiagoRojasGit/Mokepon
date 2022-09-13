@@ -21,10 +21,13 @@ const spanVidasEnemigo = document.getElementById('vidasEnemigo')
 const sectionMensajes = document.getElementById('resultado')   //traemos la seccion de nuestro HTML
 const ataquesDelJugador = document.getElementById('ataqueDelJugador')
 const ataquesDelEnemigo = document.getElementById('ataqueDelEnemigo')
+const contenedorTarjetas = document.getElementById('contenedorTarjetas')
 
+let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador
 let ataqueEnemigo
+let opcionDeMokepones
 let vidasJugador = 3
 let vidasEnemigo = 3
 
@@ -34,6 +37,7 @@ class Mokepon {  //los nombres de las clases inician con mayuscula
         //Es como, el nombre del mokepon es el nombre del constructor
         this.foto = foto
         this.vida = vida
+        this.ataques = []
     }
 }
 
@@ -43,9 +47,52 @@ let capipepo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attac
 
 let ratigueya = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5)
 
+hipodoge.ataques.push(  //Inyectando informacion cuando algun atributo de nuestra clase es un array
+    { nombre: "💧", id: "boton_agua" }, //Objeto literal, solo almacena informacion (conveniente para casos como este)
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🌱", id: "boton_tierra" }
+)
+
+capipepo.ataques.push(
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🔥", id: "boton_fuego" }
+)
+
+ratigueya.ataques.push(
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🌱", id: "boton_tierra" }
+)
+
+mokepones.push(hipodoge, capipepo, ratigueya)    //Inyecta el valor dentro del array, estamos enviando estas tres variables al array mokepoones
+
 function iniciarJuego() {
     sectionSeleccionarAtaque.style.display = 'none'  //Tosdos los elementos de html tienen una propiedad style donde por defecto ser guardan los estilos (como el color de la letra, los tamaños...)
     //Entonces, la seccion del html 'seleccionar_ataque' se ocultara cuando se ejecute la funcion iniciarJuego()
+
+    mokepones.forEach((mokepon) => {    //forEach nos permite hacer una accion recorriendo los elementos de un array, iterar por cada uno de los elementos existan dentro de un array
+        //el parametro es basicamente la forma en que se llamara el objeto durante la ejecucion del foreach
+        //por cada mokepon que existe en nuestro array de mokepones hara...
+        opcionDeMokepones = `
+        <input type="radio" name="mascota" id=${mokepon.nombre} />
+        <label class="tarjeta-de-mokepon" for=${mokepon.nombre}>
+          <p>${mokepon.nombre}</p>
+          <img
+            src=${mokepon.foto}
+            alt=${mokepon.nombre}
+          />
+        </label>
+        `
+        //opcionDeMokepones es la estructura que teniamos en HTML para crear una tarjeta de mokepon, ${} nos permite agregar un dato interactivo, es decir, los datos de nuestro mokepon
+        contenedorTarjetas.innerHTML += opcionDeMokepones   //agregamos esta estructura al HTML, con el += nos aseguramos de que se agregue esta estructura por cada objeto de nuestra clase (sin el += solo se agregaria una vez esta estructura al HTML)
+    })
     sectionReiniciar.style.display = 'none'
     botonMascotaJugador.addEventListener("click", seleecionarMascotaJugador)
     botonFuego.addEventListener("click", ataqueFuego)
