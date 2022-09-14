@@ -1,16 +1,10 @@
-//const, el resultado de la variable no va a cambiar a lo largo de la ejecucion del codigo
+//const, el valor de la variable no va a cambiar a lo largo de la ejecucion del codigo
 const sectionSeleccionarAtaque = document.getElementById("seleccionar_ataque")
 const sectionReiniciar = document.getElementById("reiniciar")
 const botonMascotaJugador = document.getElementById("boton_mascota")
-const botonFuego = document.getElementById("boton_fuego")
-const botonAgua = document.getElementById("boton_agua")
-const botonTierra = document.getElementById("boton_tierra")
 const botonReiniciar = document.getElementById('boton_reiniciar')
 
 const sectionSeleccionarMascota = document.getElementById("seleccionar_mascota")
-const inputHipodoge = document.getElementById("hipodoge")
-const inputCapipepo = document.getElementById("capipepo")
-const inputRatagueya = document.getElementById("ratigueya")
 const spanMascotaJuador = document.getElementById("mascotaJugador")
 
 const spanMascotaEnemigo = document.getElementById("mascotaEnemigo")
@@ -22,15 +16,19 @@ const sectionMensajes = document.getElementById('resultado')   //traemos la secc
 const ataquesDelJugador = document.getElementById('ataqueDelJugador')
 const ataquesDelEnemigo = document.getElementById('ataqueDelEnemigo')
 const contenedorTarjetas = document.getElementById('contenedorTarjetas')
+const contenedorAtaques = document.getElementById('contenedorAtaques')
 
 let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador
 let ataqueEnemigo
 let opcionDeMokepones
+let mascotaJugador
+let ataquesMokepon
 let vidasJugador = 3
 let vidasEnemigo = 3
-
+let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
+let botonFuego, botonAgua, botonTierra
 class Mokepon {  //los nombres de las clases inician con mayuscula
     constructor(nombre, foto, vida) {   //propiedades que usaremos en nuestra clase
         this.nombre = nombre //this hace referencia a las propiedades que tenemos dentro de nuestra clase
@@ -93,39 +91,76 @@ function iniciarJuego() {
         //opcionDeMokepones es la estructura que teniamos en HTML para crear una tarjeta de mokepon, ${} nos permite agregar un dato interactivo, es decir, los datos de nuestro mokepon
         contenedorTarjetas.innerHTML += opcionDeMokepones   //agregamos esta estructura al HTML, con el += nos aseguramos de que se agregue esta estructura por cada objeto de nuestra clase (sin el += solo se agregaria una vez esta estructura al HTML)
     })
+    inputHipodoge = document.getElementById("Hipodoge") //Asignamos un valor a las variables inicializadas en la linea 30 ya que hasta esta funcion existen esas variables dentro del HTML
+    inputCapipepo = document.getElementById("Capipepo")
+    inputRatagueya = document.getElementById("Ratigueya")
+
     sectionReiniciar.style.display = 'none'
     botonMascotaJugador.addEventListener("click", seleecionarMascotaJugador)
-    botonFuego.addEventListener("click", ataqueFuego)
-    botonAgua.addEventListener("click", ataqueAgua)
-    botonTierra.addEventListener("click", ataqueTierra)
     botonReiniciar.addEventListener('click', reiniciarJuego)
 }
 
 function seleecionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     sectionSeleccionarAtaque.style.display = 'flex'
+
     if (inputHipodoge.checked) {  //Mediante la propiedad checked podemos validar si algun input de tipo radio esta 'chuleado', entonces:
         //si el input hipodoge esta marcado, mostrara un...
         //alert("Seleccionaste a Hipodoge")
-        spanMascotaJuador.innerHTML = "Hipodogue"   //Mediante innerHTML estamos manipulando el span que esta en nuestro HTML almacenado en una variable
+        spanMascotaJuador.innerHTML = inputHipodoge.id   //Mediante innerHTML estamos manipulando el span que esta en nuestro HTML almacenado en una variable
+        mascotaJugador = inputHipodoge.id   //Almacenamos el nombre de la mascota dentro de esta varible para utilizarlo en otras funciones
         //Estamos escribiendo Hipodogue en el HTML
     } else if (inputCapipepo.checked) {
         //alert("Seleccionaste a Capipepo")
-        spanMascotaJuador.innerHTML = "Capipepo"
+        spanMascotaJuador.innerHTML = inputCapipepo.id
+        mascotaJugador = inputCapipepo.id
     } else if (inputRatagueya.checked) {
         //alert("Seleccionaste a Ratigueya")
-        spanMascotaJuador.innerHTML = "Ratigueya"
+        spanMascotaJuador.innerHTML = inputRatagueya.id
+        mascotaJugador = inputRatagueya.id
     }
     else {
         alert("Selecciona una mascota")
         sectionSeleccionarMascota.style.display = 'flex'
         sectionSeleccionarAtaque.style.display = 'none'
     }
+
+    extraerAtaques(mascotaJugador)
     seleccionarMascotaEnemigo()
 }
 
+function extraerAtaques(mascotaJugador) {   //Funcion para extraer el ataque de una mascota automaticamente
+    let ataques
+
+    for (let i = 0; i < mokepones.length; i++) {
+        if (mascotaJugador === mokepones[i].nombre) {
+            ataques = mokepones[i].ataques
+        }
+    }
+
+    mostrarAtaques(ataques)
+}
+
+function mostrarAtaques(ataques) {
+    ataques.forEach((ataque) => {
+        ataquesMokepon = `
+            <button id=${ataque.id} class="boton_ataque">${ataque.nombre}</button>
+        `
+        contenedorAtaques.innerHTML += ataquesMokepon
+    })
+
+    botonFuego = document.getElementById("boton_fuego")
+    botonAgua = document.getElementById("boton_agua")
+    botonTierra = document.getElementById("boton_tierra")
+    botonFuego.addEventListener("click", ataqueFuego)
+    botonAgua.addEventListener("click", ataqueAgua)
+    botonTierra.addEventListener("click", ataqueTierra)
+}
+
 function seleccionarMascotaEnemigo() {
-    let mascotaAleatoria = aleatorio(1, 3)
+    let mascotaAleatoria = aleatorio(0, mokepones.length - 1) //Modificamos esta variable para que segun la longitud o tamaño de nuestro array mokepones automaticamente tengamos el numero de mascotas (inicia en 0 ya que el indice de los arrays inicia en 0 y va hasta mokepones.lenght - 1 ya que realmente hay 3 mokepones, pero los indices van hasta el dos siendo entonces el rango final de 0 a 2)
+
+    /*
     if (mascotaAleatoria == 1) {
         //Hipodogue
         spanMascotaEnemigo.innerHTML = "Hipodogue"
@@ -137,6 +172,9 @@ function seleccionarMascotaEnemigo() {
         //Ratigueya
         spanMascotaEnemigo.innerHTML = "Ratigueya"
     }
+    */
+
+    spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre    //Entonces, nuestro span seria igual a nuestro array de mokepones en el indice generado por nuestra variable mascotaAleatoria
 }
 
 function ataqueFuego() {
