@@ -20,11 +20,12 @@ const contenedorAtaques = document.getElementById('contenedorAtaques')
 
 let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
-let ataqueJugador
+let ataqueJugador = []
 let ataqueEnemigo
 let opcionDeMokepones
 let mascotaJugador
 let ataquesMokepon
+let botones = []
 let vidasJugador = 3
 let vidasEnemigo = 3
 let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
@@ -144,17 +145,43 @@ function extraerAtaques(mascotaJugador) {   //Funcion para extraer el ataque de 
 function mostrarAtaques(ataques) {
     ataques.forEach((ataque) => {
         ataquesMokepon = `
-            <button id=${ataque.id} class="boton_ataque">${ataque.nombre}</button>
+            <button id=${ataque.id} class="boton_ataque BAtaque">${ataque.nombre}</button>
         `
+        //                                              Las clases separadas por espacios seran interpretadas como clases diferentes
         contenedorAtaques.innerHTML += ataquesMokepon
     })
 
     botonFuego = document.getElementById("boton_fuego")
     botonAgua = document.getElementById("boton_agua")
     botonTierra = document.getElementById("boton_tierra")
+    botones = document.querySelectorAll('.BAtaque') //Entonces, el arreglo almacenara todos lo elementos que tengan la calse BAtaque (Que en este caso serian todos los botones)
+    //.querySelectorAll Selecciona todos los elementos que tengan algo, como una clase
+
+    /*
     botonFuego.addEventListener("click", ataqueFuego)
     botonAgua.addEventListener("click", ataqueAgua)
     botonTierra.addEventListener("click", ataqueTierra)
+    */
+}
+
+function secuenciaAtaque() {
+    botones.forEach(boton => {
+        boton.addEventListener("click", (e) => {    //e es basicamente nuestro evento como tal que nos permitira acceder a las propidades del elemento al que le demos click (en este caso, a los botones a los que les demos click)
+            if (e.target.textContent === '🔥') {    //Cuando la propiedad del elemento al que le hallamos dado click sea igual a... entonces...
+                ataqueJugador.push("FUEGO")
+                console.log(ataqueJugador)
+                boton.style.background = '#112f58'
+            } else if (e.target.textContent === '💧') {
+                ataqueJugador.push("AGUA")
+                console.log(ataqueJugador)
+                boton.style.background = '#112f58'
+            } else {
+                ataqueJugador.push("TIERRA")
+                console.log(ataqueJugador)
+                boton.style.background = '#112f58'
+            }
+        })
+    });
 }
 
 function seleccionarMascotaEnemigo() {
@@ -175,8 +202,10 @@ function seleccionarMascotaEnemigo() {
     */
 
     spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre    //Entonces, nuestro span seria igual a nuestro array de mokepones en el indice generado por nuestra variable mascotaAleatoria
+    secuenciaAtaque()
 }
 
+/*
 function ataqueFuego() {
     ataqueJugador = 'FUEGO'
     ataqueAleatorioEnemigo()
@@ -191,6 +220,7 @@ function ataqueTierra() {
     ataqueJugador = 'TIERRA'
     ataqueAleatorioEnemigo()
 }
+*/
 
 function ataqueAleatorioEnemigo(params) {
     ataqueEnemigo = aleatorio(1, 3);
