@@ -21,11 +21,14 @@ const contenedorAtaques = document.getElementById('contenedorAtaques')
 let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador = []
-let ataqueEnemigo
+let ataqueEnemigo = []
 let opcionDeMokepones
 let mascotaJugador
 let ataquesMokepon
+let ataquesMokeponEnemigo
 let botones = []
+let indexAtaqueJugador
+let indexAtaqueEnemigo
 let vidasJugador = 3
 let vidasEnemigo = 3
 let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
@@ -180,8 +183,9 @@ function secuenciaAtaque() {
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
             }
+            ataqueAleatorioEnemigo()
         })
-    });
+    })
 }
 
 function seleccionarMascotaEnemigo() {
@@ -202,6 +206,7 @@ function seleccionarMascotaEnemigo() {
     */
 
     spanMascotaEnemigo.innerHTML = mokepones[mascotaAleatoria].nombre    //Entonces, nuestro span seria igual a nuestro array de mokepones en el indice generado por nuestra variable mascotaAleatoria
+    ataquesMokeponEnemigo = mokepones[mascotaAleatoria].ataques
     secuenciaAtaque()
 }
 
@@ -222,21 +227,48 @@ function ataqueTierra() {
 }
 */
 
-function ataqueAleatorioEnemigo(params) {
-    ataqueEnemigo = aleatorio(1, 3);
+function indexAmbosOponentes(jugador, enemigo) {
+    indexAtaqueJugador = ataqueJugador[jugador]
+    indexAtaqueEnemigo = ataqueEnemigo[enemigo]
+}
 
-    if (ataqueEnemigo == 1) {
-        ataqueEnemigo = 'FUEGO'
-    } else if (ataqueEnemigo == 2) {
-        ataqueEnemigo = 'AGUA'
+function ataqueAleatorioEnemigo() {
+    ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length - 1)
+
+    if (ataqueAleatorio === 0 || ataqueAleatorio === 1) {
+        ataqueEnemigo.push('FUEGO')
+    } else if (ataqueAleatorio === 3 || ataqueAleatorio === 4) {
+        ataqueEnemigo.push('AGUA')
     }
     else {
-        ataqueEnemigo = 'TIERRA'
+        ataqueEnemigo.push('TIERRA')
     }
-    combate();
+    console.log(ataqueEnemigo)
+    iniciarPelea();
+}
+
+function iniciarPelea() {
+    if (ataqueJugador.length === 5) {
+        combate();
+    }
 }
 
 function combate() {
+    for (let index = 0; index < ataqueJugador.length; index++) {
+        if (ataqueJugador[index] === ataqueEnemigo[index]) {
+            indexAmbosOponentes(index, index)
+            crearMensaje('EMPATE')
+        } else if (ataqueJugador[index] == 'FUEGO' && ataqueEnemigo[index] == 'TIERRA' || ataqueJugador[index] == 'AGUA' && ataqueEnemigo[index] == 'FUEGO' || ataqueJugador[index] == 'TIERRA' && ataqueEnemigo[index] == 'AGUA') {
+            vidasEnemigo--
+            indexAmbosOponentes(index, index)
+            crearMensaje('GANASTE')
+        } else {
+            vidasJugador--
+            indexAmbosOponentes(index, index)
+            crearMensaje('PERDISTE')
+        }
+    }
+    /*
     if (ataqueJugador == 'FUEGO' && ataqueEnemigo == 'TIERRA' || ataqueJugador == 'AGUA' && ataqueEnemigo == 'FUEGO' || ataqueJugador == 'TIERRA' && ataqueEnemigo == 'AGUA') {
         crearMensaje(' - GANASTE')
         vidasEnemigo--
@@ -249,7 +281,7 @@ function combate() {
         crearMensaje(' - PERDISTE')
         vidasJugador--
         spanVidasJugador.innerHTML = vidasJugador
-    }
+    }*/
     revisarVidas()
 }
 
@@ -267,8 +299,8 @@ function crearMensaje(resultado) {  //parametro
     let nuevoAtaqueDelEnemigo = document.createElement('p')
 
     sectionMensajes.innerHTML = resultado
-    nuevoAtaqueDelJugador.innerHTML = ataqueJugador
-    nuevoAtaqueDelEnemigo.innerHTML = ataqueEnemigo
+    nuevoAtaqueDelJugador.innerHTML = indexAtaqueJugador
+    nuevoAtaqueDelEnemigo.innerHTML = indexAtaqueEnemigo
 
     //let parrafo = document.createElement('p')    createElement nos permite crear un elemento en HTML, como argumento le pasamos el nombre de la etiqueta HTML que queremos crear 
     //parrafo.innerHTML = 'Tu mascota atacó con ' + ataqueJugador + ' , la mascota del enemigo atacó con ' + ataqueEnemigo + resultado
