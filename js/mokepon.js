@@ -18,6 +18,9 @@ const ataquesDelEnemigo = document.getElementById('ataqueDelEnemigo')
 const contenedorTarjetas = document.getElementById('contenedorTarjetas')
 const contenedorAtaques = document.getElementById('contenedorAtaques')
 
+const sectionVerMapa = document.getElementById('verMapa')
+const mapa = document.getElementById('mapa')
+
 let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador = []
@@ -35,6 +38,8 @@ let vidasJugador = 3
 let vidasEnemigo = 3
 let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
 let botonFuego, botonAgua, botonTierra
+let lienzo = mapa.getContext('2d')  //El lienzo es la forma en la que definimos el contexto en el que dibujaremos dentro de nuestro canvas
+
 class Mokepon {  //los nombres de las clases inician con mayuscula
     constructor(nombre, foto, vida) {   //propiedades que usaremos en nuestra clase
         this.nombre = nombre //this hace referencia a las propiedades que tenemos dentro de nuestra clase
@@ -42,6 +47,14 @@ class Mokepon {  //los nombres de las clases inician con mayuscula
         this.foto = foto
         this.vida = vida
         this.ataques = []
+
+        //variables para usar con canvas
+        this.x = 20
+        this.y = 30
+        this.ancho = 80
+        this.alto = 80
+        this.mapaFoto = new Image()
+        this.mapaFoto.src = foto
     }
 }
 
@@ -80,6 +93,7 @@ mokepones.push(hipodoge, capipepo, ratigueya)    //Inyecta el valor dentro del a
 function iniciarJuego() {
     sectionSeleccionarAtaque.style.display = 'none'  //Tosdos los elementos de html tienen una propiedad style donde por defecto ser guardan los estilos (como el color de la letra, los tamaños...)
     //Entonces, la seccion del html 'seleccionar_ataque' se ocultara cuando se ejecute la funcion iniciarJuego()
+    sectionVerMapa.style.display = 'none'
 
     mokepones.forEach((mokepon) => {    //forEach nos permite hacer una accion recorriendo los elementos de un array, iterar por cada uno de los elementos existan dentro de un array
         //el parametro es basicamente la forma en que se llamara el objeto durante la ejecucion del foreach
@@ -108,7 +122,14 @@ function iniciarJuego() {
 
 function seleecionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
-    sectionSeleccionarAtaque.style.display = 'flex'
+    //sectionSeleccionarAtaque.style.display = 'flex'
+    sectionVerMapa.style.display = 'flex'
+
+    //traemos la imagen del mokepon
+    //let imagenCapipepo = new Image()
+    //imagenCapipepo.src = capipepo.foto
+
+    //lienzo.fillRect(5, 14, 20, 40)  //fillRecto nos permite dibujar un rectangulo, parametros (valorX, valorY, ancho, alto)
 
     if (inputHipodoge.checked) {  //Mediante la propiedad checked podemos validar si algun input de tipo radio esta 'chuleado', entonces:
         //si el input hipodoge esta marcado, mostrara un...
@@ -352,6 +373,27 @@ function reiniciarJuego() {
 
 function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function pintarPersonaje() {    //La funcion crear el personaje dentro del canvas
+    lienzo.clearRect(0, 0, mapa.width, mapa.height) //clearRect limpia el canvas, parametro (posicionInicialX, posicionInicialY, posicionFinalAncho, posicionFinalAlto) en la posicionFinalAncho pusimos el ancho de nuestro mapa e igual con el alto
+    lienzo.drawImage(   //drawImage nos permite imprimir una imagen dentro del canvas, parametros (imagenSource, posicionX, posicionY, ancho, alto)
+        capipepo.mapaFoto,
+        capipepo.x,
+        capipepo.y,
+        capipepo.ancho,
+        capipepo.alto
+    )
+}
+
+function moverCapipepoX() {
+    capipepo.x = capipepo.x + 5
+    pintarPersonaje()
+}
+
+function moverCapipepoY() {
+    capipepo.y += 5
+    pintarPersonaje()
 }
 
 window.addEventListener("load", iniciarJuego);  //Con window podemos escuchar los eventos de la pagina en si
