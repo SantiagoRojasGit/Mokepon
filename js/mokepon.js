@@ -29,6 +29,8 @@ let ataquesMokeponEnemigo
 let botones = []
 let indexAtaqueJugador
 let indexAtaqueEnemigo
+let victoriasJugador = 0
+let victoriasEnemigo = 0
 let vidasJugador = 3
 let vidasEnemigo = 3
 let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
@@ -174,14 +176,17 @@ function secuenciaAtaque() {
                 ataqueJugador.push("FUEGO")
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true   //Cuando se use el boton no se podra volver a clickear
             } else if (e.target.textContent === '💧') {
                 ataqueJugador.push("AGUA")
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true
             } else {
                 ataqueJugador.push("TIERRA")
                 console.log(ataqueJugador)
                 boton.style.background = '#112f58'
+                boton.disabled = true
             }
             ataqueAleatorioEnemigo()
         })
@@ -227,14 +232,23 @@ function ataqueTierra() {
 }
 */
 
-function indexAmbosOponentes(jugador, enemigo) {
+function indexAmbosOponentes(jugador, enemigo) {    //Esta funcion guarda las elecciones del enemigo y el jugador
     indexAtaqueJugador = ataqueJugador[jugador]
     indexAtaqueEnemigo = ataqueEnemigo[enemigo]
 }
 
 function ataqueAleatorioEnemigo() {
-    ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length - 1)
+    let ataqueAleatorio = aleatorio(0, ataquesMokeponEnemigo.length - 1)
 
+    if (ataquesMokeponEnemigo[ataqueAleatorio].nombre == '🔥') {
+        ataqueEnemigo.push('FUEGO')
+    } else if (ataquesMokeponEnemigo[ataqueAleatorio].nombre == '💧') {
+        ataqueEnemigo.push('AGUA')
+    } else {
+        ataqueEnemigo.push('TIERRA')
+    }
+
+    /*
     if (ataqueAleatorio === 0 || ataqueAleatorio === 1) {
         ataqueEnemigo.push('FUEGO')
     } else if (ataqueAleatorio === 3 || ataqueAleatorio === 4) {
@@ -243,6 +257,8 @@ function ataqueAleatorioEnemigo() {
     else {
         ataqueEnemigo.push('TIERRA')
     }
+    */
+
     console.log(ataqueEnemigo)
     iniciarPelea();
 }
@@ -259,13 +275,15 @@ function combate() {
             indexAmbosOponentes(index, index)
             crearMensaje('EMPATE')
         } else if (ataqueJugador[index] == 'FUEGO' && ataqueEnemigo[index] == 'TIERRA' || ataqueJugador[index] == 'AGUA' && ataqueEnemigo[index] == 'FUEGO' || ataqueJugador[index] == 'TIERRA' && ataqueEnemigo[index] == 'AGUA') {
-            vidasEnemigo--
             indexAmbosOponentes(index, index)
             crearMensaje('GANASTE')
+            victoriasJugador++
+            spanVidasJugador.innerHTML = victoriasJugador
         } else {
-            vidasJugador--
             indexAmbosOponentes(index, index)
             crearMensaje('PERDISTE')
+            victoriasEnemigo++
+            spanVidasEnemigo.innerHTML = victoriasEnemigo
         }
     }
     /*
@@ -282,13 +300,15 @@ function combate() {
         vidasJugador--
         spanVidasJugador.innerHTML = vidasJugador
     }*/
-    revisarVidas()
+    revisarVictorias()
 }
 
-function revisarVidas() {
-    if (vidasEnemigo == 0) {
+function revisarVictorias() {
+    if (victoriasJugador == victoriasEnemigo) {
+        crearMensajeFinal('Esto fue un Empate!!')
+    } else if (victoriasJugador > victoriasEnemigo) {
         crearMensajeFinal('FELICITACIONSE! Ganaste :)')
-    } else if (vidasJugador == 0) {
+    } else {
         crearMensajeFinal('Lo siento, perdiste :(')
     }
 }
@@ -316,11 +336,13 @@ function crearMensajeFinal(resultadoFinal) {
 
     //sectionMensajes.appendChild(parrafo)
 
+    /*
     botonFuego.disabled = true  //asi es como podemos agregar algun atributo a un elemento de HTML desde JS
     //estamos agregandio el atributo disabled, para que cada vez que se ejecute la funcion se desabilite el boton
 
     botonAgua.disabled = true
     botonTierra.disabled = true
+    */
     sectionReiniciar.style.display = 'block'
 }
 
