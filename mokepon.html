@@ -54,9 +54,19 @@
     <section id="verMapa">
       <h1 class="titulo">Recorre el mapa con tu Mokepon</h1>
       <canvas id="mapa"></canvas>
-      <button onClick="moverCapipepoX()">Mover Derecha</button>
-      <button onClick="moverCapipepoY()">Mover Abajo</button>
-      <!--onClick es como un addEventListenner, cuando se leun click a este boton se ejecutara la funcino 'moverCapipepo'-->
+      <button onmouseup="detenerMovimiento()" onmousedown="moverArriba()">
+        Arriba
+      </button>
+      <button onmouseup="detenerMovimiento()" onmousedown="moverIzquierda()">
+        Izquierda
+      </button>
+      <button onmouseup="detenerMovimiento()" onmousedown="moverAbajo()">
+        Abajo
+      </button>
+      <button onmouseup="detenerMovimiento()" onmousedown="moverDerecha()">
+        Derecha
+      </button>
+      <!--onmousedown es como un addEventListenner, cuando presionemos y no levantemos el mouse se ejecutara la funcion x-->
     </section>
 
     <section id="seleccionar_ataque">

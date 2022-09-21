@@ -39,6 +39,7 @@ let vidasEnemigo = 3
 let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables, el valor lo asignaremos mas adelante
 let botonFuego, botonAgua, botonTierra
 let lienzo = mapa.getContext('2d')  //El lienzo es la forma en la que definimos el contexto en el que dibujaremos dentro de nuestro canvas
+let intervalo
 
 class Mokepon {  //los nombres de las clases inician con mayuscula
     constructor(nombre, foto, vida) {   //propiedades que usaremos en nuestra clase
@@ -55,6 +56,8 @@ class Mokepon {  //los nombres de las clases inician con mayuscula
         this.alto = 80
         this.mapaFoto = new Image()
         this.mapaFoto.src = foto
+        this.velocidadX = 0
+        this.velocidadY = 0
     }
 }
 
@@ -124,6 +127,8 @@ function seleecionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     //sectionSeleccionarAtaque.style.display = 'flex'
     sectionVerMapa.style.display = 'flex'
+
+    iniciarMapa()
 
     //traemos la imagen del mokepon
     //let imagenCapipepo = new Image()
@@ -376,6 +381,8 @@ function aleatorio(min, max) {
 }
 
 function pintarPersonaje() {    //La funcion crear el personaje dentro del canvas
+    capipepo.x += capipepo.velocidadX
+    capipepo.y += capipepo.velocidadY
     lienzo.clearRect(0, 0, mapa.width, mapa.height) //clearRect limpia el canvas, parametro (posicionInicialX, posicionInicialY, posicionFinalAncho, posicionFinalAlto) en la posicionFinalAncho pusimos el ancho de nuestro mapa e igual con el alto
     lienzo.drawImage(   //drawImage nos permite imprimir una imagen dentro del canvas, parametros (imagenSource, posicionX, posicionY, ancho, alto)
         capipepo.mapaFoto,
@@ -386,14 +393,56 @@ function pintarPersonaje() {    //La funcion crear el personaje dentro del canva
     )
 }
 
-function moverCapipepoX() {
-    capipepo.x = capipepo.x + 5
-    pintarPersonaje()
+function moverArriba() {
+    capipepo.velocidadY = -5
 }
 
-function moverCapipepoY() {
-    capipepo.y += 5
-    pintarPersonaje()
+function moverIzquierda() {
+    capipepo.velocidadX = -5
+}
+
+function moverAbajo() {
+    capipepo.velocidadY = 5
+}
+
+function moverDerecha() {
+    capipepo.velocidadX = 5
+}
+
+function detenerMovimiento() {
+    capipepo.velocidadX = 0
+    capipepo.velocidadY = 0
+}
+
+function teclaPresionada(event) {   //muchas veces los eventListenners devuelven un evento, dandonos la informacion necesaria para hacer manejo de dicho evento
+    switch (event.key) {    //evaluamos el valor de nuestro evento
+        case "ArrowUp":
+            moverArriba();
+            break
+
+        case "ArrowDown":
+            moverAbajo();
+            break
+
+        case "ArrowRight":
+            moverDerecha();
+            break
+
+        case "ArrowLeft":
+            moverIzquierda();
+            break
+        default:
+            break
+    }
+    //console.log(event.key);   mostrara el valor de la tecla que presionemos
+}
+
+function iniciarMapa() {
+    intervalo = setInterval(pintarPersonaje, 50)    //setInterval es una funcion que llama a una funcion constantemente con un intervalo de tiempo entre llamado, parametros (funcionARepetir, tiempoEnMilisegundos) cada cuando ejecutara la funcion
+    //Cada 50 milisegundos se ejecutara la funcion pintarPersonaje
+
+    window.addEventListener('keydown', teclaPresionada)
+    window.addEventListener('keyup', detenerMovimiento)
 }
 
 window.addEventListener("load", iniciarJuego);  //Con window podemos escuchar los eventos de la pagina en si
