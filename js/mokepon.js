@@ -27,6 +27,7 @@ let ataqueJugador = []
 let ataqueEnemigo = []
 let opcionDeMokepones
 let mascotaJugador
+let mascotaJugadorObjeto
 let ataquesMokepon
 let ataquesMokeponEnemigo
 let botones = []
@@ -40,9 +41,11 @@ let inputHipodoge, inputCapipepo, inputRatagueya  //Inicializamos las variables,
 let botonFuego, botonAgua, botonTierra
 let lienzo = mapa.getContext('2d')  //El lienzo es la forma en la que definimos el contexto en el que dibujaremos dentro de nuestro canvas
 let intervalo
+let mapaBackground = new Image()
+mapaBackground.src = './assets/mokemap.png'
 
 class Mokepon {  //los nombres de las clases inician con mayuscula
-    constructor(nombre, foto, vida) {   //propiedades que usaremos en nuestra clase
+    constructor(nombre, foto, vida, fotoMapa, x = 10, y = 10) {   //propiedades que usaremos en nuestra clase
         this.nombre = nombre //this hace referencia a las propiedades que tenemos dentro de nuestra clase
         //Es como, el nombre del mokepon es el nombre del constructor
         this.foto = foto
@@ -50,22 +53,38 @@ class Mokepon {  //los nombres de las clases inician con mayuscula
         this.ataques = []
 
         //variables para usar con canvas
-        this.x = 20
-        this.y = 30
-        this.ancho = 80
-        this.alto = 80
+        this.x = x
+        this.y = y
+        this.ancho = 40
+        this.alto = 40
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
         this.velocidadX = 0
         this.velocidadY = 0
     }
+
+    pintarMokepon() {
+        lienzo.drawImage(   //drawImage nos permite imprimir una imagen dentro del canvas, parametros (imagenSource, posicionX, posicionY, ancho, alto)
+            this.mapaFoto,  //this porque usamos los atributos del objeto
+            this.x,
+            this.y,
+            this.ancho,
+            this.alto
+        )
+    }
 }
 
-let hipodoge = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5) //Asi creamos un objeto, instancia de una clase
+let hipodoge = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5, './assets/hipodoge.png') //Asi creamos un objeto, instancia de una clase
 
-let capipepo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5)
+let capipepo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5, './assets/capipepo.png')
 
-let ratigueya = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5)
+let ratigueya = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5, './assets/ratigueya.png')
+
+let hipodogeEnemigo = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5, './assets/hipodoge.png', 80, 120)
+
+let capipepoEnemigo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5, './assets/capipepo.png', 150, 95)
+
+let ratigueyaEnemigo = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5, './assets/ratigueya.png', 200, 190)
 
 hipodoge.ataques.push(  //Inyectando informacion cuando algun atributo de nuestra clase es un array
     { nombre: "💧", id: "boton_agua" }, //Objeto literal, solo almacena informacion (conveniente para casos como este)
@@ -126,9 +145,6 @@ function iniciarJuego() {
 function seleecionarMascotaJugador() {
     sectionSeleccionarMascota.style.display = 'none'
     //sectionSeleccionarAtaque.style.display = 'flex'
-    sectionVerMapa.style.display = 'flex'
-
-    iniciarMapa()
 
     //traemos la imagen del mokepon
     //let imagenCapipepo = new Image()
@@ -158,12 +174,13 @@ function seleecionarMascotaJugador() {
     }
 
     extraerAtaques(mascotaJugador)
+    sectionVerMapa.style.display = 'flex'
+    iniciarMapa()
     seleccionarMascotaEnemigo()
 }
 
 function extraerAtaques(mascotaJugador) {   //Funcion para extraer el ataque de una mascota automaticamente
     let ataques
-
     for (let i = 0; i < mokepones.length; i++) {
         if (mascotaJugador === mokepones[i].nombre) {
             ataques = mokepones[i].ataques
@@ -380,38 +397,42 @@ function aleatorio(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-function pintarPersonaje() {    //La funcion crear el personaje dentro del canvas
-    capipepo.x += capipepo.velocidadX
-    capipepo.y += capipepo.velocidadY
+function pintarCanvas() {    //La funcion crear el personaje dentro del canvas
+
+    mascotaJugadorObjeto.x += mascotaJugadorObjeto.velocidadX
+    mascotaJugadorObjeto.y += mascotaJugadorObjeto.velocidadY
     lienzo.clearRect(0, 0, mapa.width, mapa.height) //clearRect limpia el canvas, parametro (posicionInicialX, posicionInicialY, posicionFinalAncho, posicionFinalAlto) en la posicionFinalAncho pusimos el ancho de nuestro mapa e igual con el alto
-    lienzo.drawImage(   //drawImage nos permite imprimir una imagen dentro del canvas, parametros (imagenSource, posicionX, posicionY, ancho, alto)
-        capipepo.mapaFoto,
-        capipepo.x,
-        capipepo.y,
-        capipepo.ancho,
-        capipepo.alto
+    lienzo.drawImage(
+        mapaBackground,
+        0, 0,
+        mapa.width,
+        mapa.height
     )
+    mascotaJugadorObjeto.pintarMokepon()
+    hipodogeEnemigo.pintarMokepon()
+    capipepoEnemigo.pintarMokepon()
+    ratigueyaEnemigo.pintarMokepon()
 }
 
 function moverArriba() {
-    capipepo.velocidadY = -5
+    mascotaJugadorObjeto.velocidadY = -5
 }
 
 function moverIzquierda() {
-    capipepo.velocidadX = -5
+    mascotaJugadorObjeto.velocidadX = -5
 }
 
 function moverAbajo() {
-    capipepo.velocidadY = 5
+    mascotaJugadorObjeto.velocidadY = 5
 }
 
 function moverDerecha() {
-    capipepo.velocidadX = 5
+    mascotaJugadorObjeto.velocidadX = 5
 }
 
 function detenerMovimiento() {
-    capipepo.velocidadX = 0
-    capipepo.velocidadY = 0
+    mascotaJugadorObjeto.velocidadX = 0
+    mascotaJugadorObjeto.velocidadY = 0
 }
 
 function teclaPresionada(event) {   //muchas veces los eventListenners devuelven un evento, dandonos la informacion necesaria para hacer manejo de dicho evento
@@ -438,11 +459,22 @@ function teclaPresionada(event) {   //muchas veces los eventListenners devuelven
 }
 
 function iniciarMapa() {
-    intervalo = setInterval(pintarPersonaje, 50)    //setInterval es una funcion que llama a una funcion constantemente con un intervalo de tiempo entre llamado, parametros (funcionARepetir, tiempoEnMilisegundos) cada cuando ejecutara la funcion
-    //Cada 50 milisegundos se ejecutara la funcion pintarPersonaje
+    mapa.width = 320
+    mapa.height = 240
+    mascotaJugadorObjeto = obtenerObjetoMascota(mascotaJugador)
+    intervalo = setInterval(pintarCanvas, 50)    //setInterval es una funcion que llama a una funcion constantemente con un intervalo de tiempo entre llamado, parametros (funcionARepetir, tiempoEnMilisegundos) cada cuando ejecutara la funcion
+    //Cada 50 milisegundos se ejecutara la funcion pintarCanvas
 
     window.addEventListener('keydown', teclaPresionada)
     window.addEventListener('keyup', detenerMovimiento)
+}
+
+function obtenerObjetoMascota() {
+    for (let i = 0; i < mokepones.length; i++) {
+        if (mascotaJugador === mokepones[i].nombre) {
+            return mokepones[i]
+        }
+    }
 }
 
 window.addEventListener("load", iniciarJuego);  //Con window podemos escuchar los eventos de la pagina en si
