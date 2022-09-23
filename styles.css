@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&display=swap');
+
+body {
+    font-family: 'DotGothic16', sans-serif;
+    background-color: #7FB77E;
+}
+
+#seleccionar_mascota{   /*id del contenedor, el cual contiene una serie de elmentos hijos que seran afectados por el flexbox
+
+    /*flexbox es una herramienta que nos permite alienar elementos y posicionarlos de diferentes formas dentro de la web
+        documentacion: https://css-tricks.com/snippets/css/a-guide-to-flexbox/*/
+    
+    display: flex;  /*indicamos que trabajaremos con flex
+    cuando inicializamos el flex, la propiedad direction ya tendra un valor por defecto y pondra todos los elementos uno junto al otro*/
+
+    flex-direction: column; /*ahora, todos los elementos hijo estaran uno debajo del otro*/
+    justify-content: center;    /*centra los elementos verticalmente*/
+    align-items: center;    /*centra los elementos horizontalmente*/
+}
+
+.titulo{
+    color: #F7F6DC;
+    font-size: 32px;
+    /*
+    width: 320px;   ancho
+    height: 50px;   alto
+    background-color: teal;
+    */
+}
+
+/*
+
+Para operar en css con diferentes selectores de HTML usamos:
+
+    para clases: .clase
+    para id: #id
+
+
+Los titulos (h1, h2...) son display:block, lo cual quiere decuir que ocupan toda la linea verticalmente en la que esten puesta
+
+label{  Los label son por defecto display:inline, es decir el widt y heigth no le afectaran y siempre tendran el mismo tamaño
+    background-color: tomato;
+    width: 310px;
+    height: 50px; 
+}
+
+input{  Los input son display:inline-block, esto quiere decir que si podremos modificar su tamao
+    background-color: aqua;
+    width: 310px;
+    height: 50px; 
+}
+
+button {    Los button tambien son display:inline-blocl
+    background-color: blueviolet;
+    width: 310px;
+    height: 50px; 
+}
+*/
+
+#seleccionar_mascota #boton_mascota {
+    width: 180px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 2px solid #F7F6DC;
+    color: white;
+    font-family: 'DotGothic16', sans-serif;
+    padding: 0.5px;
+    margin-top: 30px;
+}
+
+.subtitulo {
+    color: #F7F6DC;
+    font-size: 20px;
+}
+
+.tarjetas, .tarjetasAtaques {
+    display: flex;
+    gap: 10px;  /*gap es para poner espacio entre elementos (en este caso, todos los elementos de la seccion tarjetas tendra un espaciado de 10px)*/
+}
+
+.tarjeta-de-mokepon{
+    width: 180px;
+    height: 100px;
+    background: #B1D7B4;
+    padding: 10px;  /*el padding es el margen interno que tiene el elemento*/
+    border-radius: 20px;
+    display: flex;
+    color: #F7F6DC;
+    justify-content: center;
+    align-items: center;
+
+    /*
+    margin: 10px;   esta sera la separacion que habra entre elementos
+    border: 1px solid black;    este sera el borde que tendra, se pone el grosor en px, el tipo de borde que sera y el color
+    */
+
+    box-sizing: border-box; /*esta propiedad hace que el tamaño del elemento no se vea afectado por los padding, se agregara el padding
+    pero no agrandara el elemento*/
+}
+
+.tarjeta-de-mokepon img {
+    width: 80px;
+}
+
+input {
+    display: none;
+}
+
+#seleccionar_ataque{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boton_ataque{
+    background-color: #B1D7B4;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 20px;
+    border-color: transparent;
+    width: 80px;
+    color: #F7F6DC;
+    font-family: 'DotGothic16', sans-serif;
+}
+
+#mensajes{
+    width: 280px;
+    background: #F7F6DC;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#boton_reiniciar{
+    border: none;   /*none, ningun borde*/
+    color: #F7F6DC;
+    font-family: 'DotGothic16', sans-serif;
+    background-color: #B1D7B4;
+    border-radius: 5px;
+    padding-left: 8px;
+    height: 25px;
+}
+
+.ataques{
+    display: grid;  /*Asi activamos CSS Grid*/
+    grid-template-columns: 100px 100px;
+    text-align: center;
+}
+
+#vidasJugador, #vidasEnemigo{
+    font-size: 32px;
+    margin-bottom: 0;
+}
+
+#verMapa {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#mapa {
+    border: 2px solid white;
+}
+
+@media(max-width: 360px) {  /*Asi podemos acrtivar el media Query, para el responsuive design
+    /*max-widht es el tamaño maximo del dispositivo
+    */
+    .tarjetas, .tarjetasAtaques{
+        flex-direction: column;
+    }
+}
+
+input:checked + label { /* cuando los inputs esten seleccionados, el siguiente label tendra un... */
+    background-color: #F7F6DC;
+}
+
+/*
+Pseudo clses, acciones del usuario (interactividad de la web con el usuario)
+    :hover, cuando se pasa el mouse encima de algun elemento
+    :active, cuando se le da clc a algun elemento
+    :checked, cuando algun input esta clickeado
+
+*/
