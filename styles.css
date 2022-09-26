@@ -164,14 +164,36 @@ input {
     justify-content: center;
 }
 
+#verMapa button{
+    width: 80px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 2px solid #F7F6DC;
+    color: white;
+    font-family: 'DotGothic16', sans-serif;
+    padding: 0.5px;
+    margin-top: 10px;
+}
+
+/*
 #mapa {
     border: 2px solid white;
 }
+*/
 
-@media(max-width: 360px) {  /*Asi podemos acrtivar el media Query, para el responsuive design
+@media(max-width: 480px) {  /*Asi podemos acrtivar el media Query, para el responsuive design
     /*max-widht es el tamaño maximo del dispositivo
     */
     .tarjetas, .tarjetasAtaques{
+        flex-direction: column;
+    }
+}
+
+@media(max-width: 480px) {
+    #verMapa div{
+        display: flex;
+        align-items: center;
         flex-direction: column;
     }
 }
