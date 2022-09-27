@@ -176,6 +176,22 @@ function iniciarJuego() {
     sectionReiniciar.style.display = 'none'
     botonMascotaJugador.addEventListener("click", seleecionarMascotaJugador)
     botonReiniciar.addEventListener('click', reiniciarJuego)
+
+    unirseAlJuego()
+}
+
+function unirseAlJuego() {
+    fetch("http://localhost:8080/unirse")//fetch nos permite realizar llamadas hacia otros servicios mediante HTTP
+        //En este caso realiza una llamada get por defecto
+
+        .then(function (res) {  //es una propiedad que tiene todas las peticiones asincronas, es lo que se ejecutara cuando se resuelva la respuesta del servidor (cuando cargue el servidor)
+            if (res.ok) {   //Si la peticion es correcta entonces...
+                res.text()  //.text porque lo que esperamos es un texto del node que seria el id
+                    .then(function (respuesta) {    //obtenemos la respuesta lista para ser utilizada
+                        console.log(respuesta);
+                    })
+            }
+        })
 }
 
 function seleecionarMascotaJugador() {
