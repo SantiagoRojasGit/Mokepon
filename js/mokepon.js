@@ -21,6 +21,7 @@ const contenedorAtaques = document.getElementById('contenedorAtaques')
 const sectionVerMapa = document.getElementById('verMapa')
 const mapa = document.getElementById('mapa')
 
+let jugadorId = null
 let mokepones = []  //Declaramos un array
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador = []
@@ -188,7 +189,8 @@ function unirseAlJuego() {
             if (res.ok) {   //Si la peticion es correcta entonces...
                 res.text()  //.text porque lo que esperamos es un texto del node que seria el id
                     .then(function (respuesta) {    //obtenemos la respuesta lista para ser utilizada
-                        console.log(respuesta);
+                        console.log(respuesta)
+                        jugadorId = respuesta   //almacenamos la respuesta en una variable
                     })
             }
         })
@@ -224,9 +226,26 @@ function seleecionarMascotaJugador() {
         sectionSeleccionarAtaque.style.display = 'none'
     }
 
+    seleccionarMokepon(mascotaJugador)
+
     extraerAtaques(mascotaJugador)
     sectionVerMapa.style.display = 'flex'
     iniciarMapa()
+}
+
+function seleccionarMokepon(mascotaJugador) {
+    fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
+        //modificamos el fetch para que se convierta en tipo POST mediante un segundo parametro
+        method: "post", //indicamos que el metodo esta peticion es de tipo POST
+        headers: {  //Indicamos que tipo de dato vamos a enviar al servidor
+            "Content-Type": "application/json"  //Definimos el tipo de dato que estamos enviando, en este caso el valor estamos enviando un JSON
+        },
+        body: JSON.stringify({  //Es lo que envia nuestra peticion, convertimos el JSON en una cadena de texto
+            mokepon: mascotaJugador //Enviamos al backet el nombre del mokepon
+        })
+
+        //No es necesario agregar un then ya que esta peticion no espera ninguna accion, simplemente envia informacion
+    })
 }
 
 function extraerAtaques(mascotaJugador) {   //Funcion para extraer el ataque de una mascota automaticamente
