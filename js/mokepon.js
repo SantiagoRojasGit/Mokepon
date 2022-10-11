@@ -23,6 +23,7 @@ const mapa = document.getElementById('mapa')
 
 let jugadorId = null
 let mokepones = []  //Declaramos un array
+let mokeponesEnemigos = []
 //let, el valor de la variable puede cambiar a lo largo de la ejecucion del codigo
 let ataqueJugador = []
 let ataqueEnemigo = []
@@ -58,7 +59,8 @@ mapa.width = anchoMapa
 mapa.height = alturaBuscada
 
 class Mokepon {  //los nombres de las clases inician con mayuscula
-    constructor(nombre, foto, vida, fotoMapa, /*x = 10, y = 10*/) {   //propiedades que usaremos en nuestra clase
+    constructor(nombre, foto, vida, fotoMapa, /*x = 10, y = 10*/ id = null) {   //propiedades que usaremos en nuestra clase
+        this.id = id
         this.nombre = nombre //this hace referencia a las propiedades que tenemos dentro de nuestra clase
         //Es como, el nombre del mokepon es el nombre del constructor
         this.foto = foto
@@ -93,59 +95,86 @@ let capipepo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attac
 
 let ratigueya = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5, './assets/ratigueya.png')
 
-let hipodogeEnemigo = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5, './assets/hipodoge.png')
+const HIPODOGE_ATAQUES = [
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🌱", id: "boton_tierra" }
+]
 
-let capipepoEnemigo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5, './assets/capipepo.png')
-
-let ratigueyaEnemigo = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5, './assets/ratigueya.png')
-
-hipodoge.ataques.push(  //Inyectando informacion cuando algun atributo de nuestra clase es un array
+hipodoge.ataques.push(...HIPODOGE_ATAQUES  //los ... hacen que en vez de almacenar una lista como tal, hace una simulacion como si literalmente hubiesemos escrito lo que esta dentro de la lista
+    /*
+    //Inyectando informacion cuando algun atributo de nuestra clase es un array
     { nombre: "💧", id: "boton_agua" }, //Objeto literal, solo almacena informacion (conveniente para casos como este)
     { nombre: "💧", id: "boton_agua" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🌱", id: "boton_tierra" }
+    */
 )
-
-hipodogeEnemigo.ataques.push(  //Inyectando informacion cuando algun atributo de nuestra clase es un array
-    { nombre: "💧", id: "boton_agua" }, //Objeto literal, solo almacena informacion (conveniente para casos como este)
+/*
+hipodogeEnemigo.ataques.push(...HIPODOGE_ATAQUES
+    { nombre: "💧", id: "boton_agua" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🌱", id: "boton_tierra" }
-)
+)*/
 
-capipepo.ataques.push(
+const CAPIPEPO_ATAQUES = [
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🔥", id: "boton_fuego" }
-)
+]
 
-capipepoEnemigo.ataques.push(
+capipepo.ataques.push(...CAPIPEPO_ATAQUES
+    /*
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "🌱", id: "boton_tierra" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🔥", id: "boton_fuego" }
+    */
 )
 
-ratigueya.ataques.push(
+/*
+capipepoEnemigo.ataques.push(...CAPIPEPO_ATAQUES
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "🌱", id: "boton_tierra" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🔥", id: "boton_fuego" }
+)*/
+
+const RATIGUEYA_ATAQUES = [
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🌱", id: "boton_tierra" }
-)
+]
 
-ratigueyaEnemigo.ataques.push(
+ratigueya.ataques.push(...RATIGUEYA_ATAQUES
+    /*
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "🔥", id: "boton_fuego" },
     { nombre: "💧", id: "boton_agua" },
     { nombre: "🌱", id: "boton_tierra" }
+    */
 )
+
+/*
+ratigueyaEnemigo.ataques.push(...RATIGUEYA_ATAQUES
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "🔥", id: "boton_fuego" },
+    { nombre: "💧", id: "boton_agua" },
+    { nombre: "🌱", id: "boton_tierra" }
+)*/
 
 mokepones.push(hipodoge, capipepo, ratigueya)    //Inyecta el valor dentro del array, estamos enviando estas tres variables al array mokepoones
 
@@ -480,6 +509,12 @@ function pintarCanvas() {    //La funcion crear el personaje dentro del canvas
         mapa.height
     )
     mascotaJugadorObjeto.pintarMokepon()
+
+    enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
+    mokeponesEnemigos.forEach(mokepon => {
+        mokepon.pintarMokepon()
+    });
+    /*
     hipodogeEnemigo.pintarMokepon()
     capipepoEnemigo.pintarMokepon()
     ratigueyaEnemigo.pintarMokepon()
@@ -488,6 +523,47 @@ function pintarCanvas() {    //La funcion crear el personaje dentro del canvas
         revisarColision(capipepoEnemigo)
         revisarColision(ratigueyaEnemigo)
     }
+    */
+}
+
+function enviarPosicion(x, y) {
+    fetch(`http://localhost:8080/mokepon/${jugadorId}/posicion`, {
+        method: "post",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            x,  //Asi le podemos decir a JS que usamos lo mismo como clave y valor, es decir eso es igual a...
+            //x: x
+            y
+        })
+    })
+
+        .then(function (res) {
+            if (res.ok) {
+                //Si la peticion es correcta, leemos los datos
+                res.json()
+                    .then(function ({ enemigos }) {    //en los parametros extraimos directamente el valor de enemigos en nuestra respuesta
+                        console.log(enemigos)
+                        mokeponesEnemigos = enemigos.map(enemigo => {   //map funciona como forEach, la unica diferencia es que retorna una nueva lista que debemos almacenar
+                            let mokeponEnemigo = null
+                            const mokeponNombre = enemigo.mokepon.nombre || ""
+                            if (mokeponNombre === "Hipodoge") {
+                                mokeponEnemigo = new Mokepon("Hipodoge", './assets/mokepons_mokepon_hipodoge_attack.webp', 5, './assets/hipodoge.png')
+                            } else if (mokeponNombre === "Capipepo") {
+                                mokeponEnemigo = new Mokepon("Capipepo", "./assets/mokepons_mokepon_capipepo_attack.webp", 5, './assets/capipepo.png')
+                            } else if (mokeponNombre === "Ratigueya") {
+                                mokeponEnemigo = new Mokepon("Ratigueya", "./assets/mokepons_mokepon_ratigueya_attack.webp", 5, './assets/ratigueya.png')
+                            }
+
+                            mokeponEnemigo.x = enemigo.x
+                            mokeponEnemigo.y = enemigo.y
+
+                            return mokeponEnemigo
+                        })
+                    })
+            }
+        })
 }
 
 function moverArriba() {
